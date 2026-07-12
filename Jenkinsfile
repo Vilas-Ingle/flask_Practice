@@ -5,46 +5,30 @@ pipeline {
     stages {
 
     stage('Build') {
-
         steps {
-                sh '''
-                python3 --version
-                python3 -m venv venv
-                source venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
-                '''
-
-        }
-
+        sh '''
+        python3 --version
+        python3 -m venv venv
+        ./venv/bin/pip install --upgrade pip
+        ./venv/bin/pip install -r requirements.txt
+        '''
     }
+}
 
     stage('Test') {
-
-        steps {
-
+    steps {
         sh '''
-        source venv/bin/activate
-        pytest -v
+        ./venv/bin/pytest -v
         '''
-
     }
-
 }
     stage('Deploy') {
-
-        steps {
-
+    steps {
         sh '''
-        source venv/bin/activate
-
         pkill -f "python3 app.py" || true
-
-        nohup python3 app.py > flask.log 2>&1 &
+        nohup ./venv/bin/python app.py > flask.log 2>&1 &
         '''
-
     }
-
 }
     }
 }
