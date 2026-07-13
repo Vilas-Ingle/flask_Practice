@@ -38,40 +38,17 @@ EOF
 }
 
     post {
-
     success {
         mail to: 'vilasaingle@gmail.com',
-             subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-             body: """
-Good News!
-
-Job Name: ${env.JOB_NAME}
-Build Number: ${env.BUILD_NUMBER}
-
-The Jenkins pipeline completed successfully.
-
-Regards,
-Jenkins
-"""
+             subject: "SUCCESS: Job ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+             body: "Good News! Job Name: ${env.JOB_NAME} Build Number: ${env.BUILD_NUMBER}\nThe Jenkins pipeline completed successfully.\n\nRegards,\nJenkins"
     }
-
     failure {
         mail to: 'vilasaingle@gmail.com',
-             subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-             body: """
-Attention!
-
-Job Name: ${env.JOB_NAME}
-Build Number: ${env.BUILD_NUMBER}
-
-The Jenkins pipeline has failed.
-
-Please check Jenkins console output.
-
-Regards,
-Jenkins
-"""
+             subject: "FAILED: Job ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
+             body: "Attention! Job Name: ${env.JOB_NAME} Build Number: ${env.BUILD_NUMBER}\nThe Jenkins pipeline has failed. Please check Jenkins console output.\n\nRegards,\nJenkins"
     }
 }
+
     }
 }
