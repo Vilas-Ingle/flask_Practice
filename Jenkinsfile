@@ -24,7 +24,7 @@ EOF
         stage('Test') {
             steps {
                 sh '''
-                ./venv/bin/pytest -v
+                ./venv/bin/pytesttt -v
                 '''
             }
         }
