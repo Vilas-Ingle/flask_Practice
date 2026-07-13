@@ -40,7 +40,7 @@ EOF
     post {
 
     success {
-        mail to: 'YOUR_GMAIL@gmail.com',
+        mail to: 'vilasaingle@gmail.com',
              subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
              body: """
 Good News!
@@ -56,7 +56,7 @@ Jenkins
     }
 
     failure {
-        mail to: 'YOUR_GMAIL@gmail.com',
+        mail to: 'vilasaingle@gmail.com',
              subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
              body: """
 Attention!
