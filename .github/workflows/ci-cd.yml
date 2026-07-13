@@ -29,3 +29,11 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt
+
+      - name: Create .env file
+        run: |
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+
+      - name: Display .env file
+        run: cat .env
