@@ -1,0 +1,8 @@
+name: Flask CI/CD pipeline
+on:
+  push:
+    branches:
+      -main
+      -staging
+
+jobs:
