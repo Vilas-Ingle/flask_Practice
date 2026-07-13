@@ -1,139 +1,282 @@
-# Student Registration System
+# Jenkins CI Pipeline for Flask Application
 
-A simple **Flask** web application to manage student records with **MongoDB** as the backend database. Users can **add, view, update, and delete** student details.
+## Project Overview
 
----
+This project demonstrates a **Continuous Integration (CI) Pipeline** for a Flask-based Student Registration System using **Jenkins**.
 
-## Features
+The pipeline automatically builds, tests, and deploys the application whenever code is pushed to the **main** branch of the GitHub repository.
 
-* List all students on the home page
-* Add a new student
-* Update existing student details
-* Delete a student with confirmation
-* Simple and responsive UI using Bootstrap
+The project also includes:
 
----
-
-## Tech Stack
-
-* **Backend:** Python, Flask
-* **Database:** MongoDB (via Flask-PyMongo)
-* **Frontend:** HTML, Jinja2 templates, Bootstrap 5
-* **Environment Variables:** Managed via `.env` file
+* Jenkins Pipeline as Code (`Jenkinsfile`)
+* GitHub Webhook Integration
+* Automated Unit Testing using Pytest
+* Automated Email Notifications on Build Success/Failure
+* Basic Deployment to a Jenkins staging environment
 
 ---
 
-## Setup Instructions
+# Project Architecture
 
-### 1. Clone the repository
-
-```bash
-git clone <your-repo-url>
-cd <repo-folder>
+```text
+Developer
+    │
+    │ Git Push
+    ▼
+GitHub Repository
+    │
+    │ Webhook
+    ▼
+Jenkins Pipeline
+    │
+    ├── Build
+    ├── Test
+    └── Deploy
+    │
+    ▼
+Email Notification
 ```
 
-### 2. Create and activate a virtual environment
+---
+
+# Technology Stack
+
+| Component            | Technology       |
+| -------------------- | ---------------- |
+| Programming Language | Python 3         |
+| Framework            | Flask            |
+| Database             | MongoDB Atlas    |
+| CI Tool              | Jenkins          |
+| Version Control      | Git & GitHub     |
+| Testing Framework    | Pytest           |
+| Operating System     | Ubuntu 24.04 LTS |
+| Cloud Platform       | AWS EC2          |
+
+---
+
+# Project Structure
+
+```text
+flask_Practice/
+│
+├── templates/
+├── app.py
+├── test_app.py
+├── requirements.txt
+├── Jenkinsfile
+├── start_flask.sh
+├── README.md
+├── .env
+└── docs/
+    └── screenshots/
+```
+
+---
+
+# Jenkins Pipeline
+
+The Jenkins pipeline is defined inside the **Jenkinsfile**.
+
+It contains three stages.
+
+## Build Stage
+
+The Build stage performs the following tasks:
+
+* Creates Python Virtual Environment
+* Upgrades pip
+* Installs project dependencies
+* Creates the required `.env` file
+
+---
+
+## Test Stage
+
+The Test stage executes:
 
 ```bash
-python -m venv venv
-# Activate venv
-# Windows:
-venv\Scripts\activate
-# Linux / Mac:
+pytest -v
+```
+
+If any test fails, the pipeline stops immediately.
+
+---
+
+## Deploy Stage
+
+The Deploy stage performs a simple deployment by:
+
+* Stopping the previous Flask process (if running)
+* Starting the Flask application
+
+Deployment is intended for a staging environment for learning purposes.
+
+---
+
+# GitHub Webhook
+
+A GitHub Webhook has been configured between GitHub and Jenkins.
+
+Whenever code is pushed to the **main** branch:
+
+* GitHub automatically notifies Jenkins.
+* Jenkins starts the pipeline automatically.
+* No manual build is required.
+
+---
+
+# Email Notifications
+
+Jenkins has been configured with Gmail SMTP.
+
+Notifications are automatically sent for:
+
+* Successful Builds
+* Failed Builds
+
+This allows developers to know the pipeline status without logging into Jenkins.
+
+---
+
+# Local Setup
+
+## Clone Repository
+
+```bash
+git clone https://github.com/Vilas-Ingle/flask_Practice.git
+cd flask_Practice
+```
+
+---
+
+## Create Virtual Environment
+
+```bash
+python3 -m venv venv
+```
+
+Activate it:
+
+Linux/Mac
+
+```bash
 source venv/bin/activate
 ```
 
-### 3. Install dependencies
+Windows
+
+```cmd
+venv\Scripts\activate
+```
+
+---
+
+## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-**`requirements.txt` example:**
+---
 
-```
-Flask
-Flask-PyMongo
-python-dotenv
-bson
-```
+## Configure Environment Variables
 
-### 4. Configure environment variables
+Create a `.env` file:
 
-Create a `.env` file in the project root:
-
-```
-MONGO_URI=<your-mongodb-connection-string>
-SECRET_KEY=<your-secret-key>
+```text
+MONGO_URI=<MongoDB Connection String>
+SECRET_KEY=<Secret Key>
 ```
 
-### 5. Run the application
+---
+
+## Run Application
 
 ```bash
 python app.py
 ```
 
-Open your browser at: [http://localhost:8000](http://localhost:8000)
+Application will be available at:
 
----
-
-## Project Structure
-
-```
-project/
-│
-├── templates/
-│   ├── base.html
-│   ├── index.html
-│   ├── add_student.html
-│   ├── update_student.html
-│
-├── app.py
-├── requirements.txt
-└── .env
+```text
+http://localhost:5000
 ```
 
 ---
 
-## Screenshots
+# Running Tests
 
-**Home Page**
-Lists all students with Edit/Delete buttons.
-- <img width="1902" height="607" alt="image" src="https://github.com/user-attachments/assets/a58a6a6d-4978-4769-8074-232e4d31e69d" />
+Execute:
 
-
-**Add Student**
-Form to add a new student.
-- <img width="1897" height="801" alt="image" src="https://github.com/user-attachments/assets/d65d25c3-ebb5-410a-adb1-e130ad7c5878" />
-
-
-**Update Student**
-Form pre-filled with student details.
-- <img width="1905" height="897" alt="image" src="https://github.com/user-attachments/assets/04febf01-879f-431f-ab07-abcfb993acf1" />
-
-
+```bash
+pytest -v
+```
 
 ---
 
-## Notes
+# Screenshots
 
-* Make sure MongoDB is running and accessible via the URI in `.env`
-* Delete action includes a confirmation page to prevent accidental deletion
-* Uses `ObjectId` from `bson` to work with MongoDB document IDs
-* If you use MongoDB Atlas on macOS, install dependencies again (`pip install -r requirements.txt`). This project now uses `certifi` CA bundle explicitly to avoid common TLS certificate verification failures with `pymongo`.
+The project includes screenshots for:
+
+* Project Structure
+* Python Virtual Environment
+* Jenkins Installation
+* Jenkins Dashboard
+* Jenkins Pipeline
+* Successful Pipeline Execution
+* GitHub Webhook
+* Webhook Trigger
+* Success Email Notification
+* Failure Email Notification
+* Flask Application
+* Pytest Execution
+
+Screenshots are available inside:
+
+```text
+docs/screenshots/flask-assignment/
+```
 
 ---
 
-## webhook Test
-Github webhook added successfully
+# Future Improvements
+
+This project currently demonstrates a basic Jenkins CI pipeline.
+
+Future enhancements include:
+
+* Dockerizing the Flask application
+* Deploying using Docker Compose
+* Deploying with Gunicorn + Nginx
+* CI/CD using GitHub Actions
+* Kubernetes deployment
+* Production deployment using Systemd services
 
 ---
 
-## License
+# Deliverables
 
-MIT License
+✔ Jenkins Installation
+
+✔ Jenkinsfile
+
+✔ GitHub Webhook
+
+✔ Automated Build
+
+✔ Automated Testing
+
+✔ Automated Deployment
+
+✔ Email Notifications
+
+✔ Documentation
+
+✔ Screenshots
 
 ---
 
+# License
 
+This project is licensed under the MIT License.
 
