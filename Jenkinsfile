@@ -36,5 +36,42 @@ EOF
         '''
     }
 }
+
+    post {
+
+    success {
+        mail to: 'YOUR_GMAIL@gmail.com',
+             subject: "SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+             body: """
+Good News!
+
+Job Name: ${env.JOB_NAME}
+Build Number: ${env.BUILD_NUMBER}
+
+The Jenkins pipeline completed successfully.
+
+Regards,
+Jenkins
+"""
+    }
+
+    failure {
+        mail to: 'YOUR_GMAIL@gmail.com',
+             subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+             body: """
+Attention!
+
+Job Name: ${env.JOB_NAME}
+Build Number: ${env.BUILD_NUMBER}
+
+The Jenkins pipeline has failed.
+
+Please check Jenkins console output.
+
+Regards,
+Jenkins
+"""
+    }
+}
     }
 }
