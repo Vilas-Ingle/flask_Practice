@@ -1,56 +1,137 @@
-# Jenkins CI Pipeline for Flask Application
+# Flask Student Registration System – CI/CD using Jenkins & GitHub Actions
 
 ## Project Overview
 
-This project demonstrates a **Continuous Integration (CI) Pipeline** for a Flask-based Student Registration System using **Jenkins**.
+This project demonstrates a complete **CI/CD implementation** for a Flask-based **Student Registration System** using two industry-standard automation tools:
 
-The pipeline automatically builds, tests, and deploys the application whenever code is pushed to the **main** branch of the GitHub repository.
+* **Jenkins**
+* **GitHub Actions**
 
-The project also includes:
+The application performs CRUD operations on student records stored in **MongoDB Atlas**.
 
-* Jenkins Pipeline as Code (`Jenkinsfile`)
-* GitHub Webhook Integration
+Both Jenkins and GitHub Actions automate the software delivery lifecycle by building, testing, and deploying the application whenever code changes are pushed to the repository.
+
+---
+
+# Features
+
+* Add Student
+* View Students
+* Update Student
+* Delete Student
+* MongoDB Atlas Integration
 * Automated Unit Testing using Pytest
-* Automated Email Notifications on Build Success/Failure
-* Basic Deployment to a Jenkins staging environment
+* CI/CD using Jenkins
+* CI/CD using GitHub Actions
+* Branch-based Deployment
+* Email Notifications using Jenkins
 
 ---
 
 # Project Architecture
 
 ```text
-Developer
-    │
-    │ Git Push
-    ▼
-GitHub Repository
-    │
-    │ Webhook
-    ▼
-Jenkins Pipeline
-    │
-    ├── Build
-    ├── Test
-    └── Deploy
-    │
-    ▼
-Email Notification
+                        Developer
+                            │
+                        Git Push
+                            │
+                    GitHub Repository
+                    ┌─────────┴─────────┐
+                    │                   │
+            GitHub Actions         Jenkins
+                    │                   │
+            Build → Test → Deploy  Build → Test → Deploy
+                    │                   │
+      Staging / Production      Email Notification
 ```
 
 ---
 
 # Technology Stack
 
-| Component            | Technology       |
-| -------------------- | ---------------- |
-| Programming Language | Python 3         |
-| Framework            | Flask            |
-| Database             | MongoDB Atlas    |
-| CI Tool              | Jenkins          |
-| Version Control      | Git & GitHub     |
-| Testing Framework    | Pytest           |
-| Operating System     | Ubuntu 24.04 LTS |
-| Cloud Platform       | AWS EC2          |
+| Component            | Technology              |
+| -------------------- | ----------------------- |
+| Programming Language | Python 3.12             |
+| Framework            | Flask                   |
+| Database             | MongoDB Atlas           |
+| Frontend             | HTML, Bootstrap         |
+| Testing              | Pytest                  |
+| Version Control      | Git & GitHub            |
+| CI/CD                | Jenkins, GitHub Actions |
+| Operating System     | Ubuntu 24.04 LTS        |
+| Cloud Platform       | AWS EC2                 |
+
+---
+
+# CI/CD Implementation
+
+This project demonstrates two different CI/CD implementations for the same Flask application.
+
+---
+
+## Part 1 – Jenkins CI/CD
+
+The Jenkins pipeline is implemented using **Pipeline as Code** through the `Jenkinsfile`.
+
+### Pipeline Stages
+
+### Build
+
+* Creates Python Virtual Environment
+* Upgrades pip
+* Installs dependencies
+* Creates `.env` file
+
+### Test
+
+* Executes unit tests using Pytest
+* Stops the pipeline if any test fails
+
+### Deploy
+
+* Stops the previous Flask application
+* Starts the latest application instance
+
+### Additional Features
+
+* GitHub Webhook Integration
+* Automatic Pipeline Trigger
+* Email Notifications on Build Success/Failure
+
+---
+
+## Part 2 – GitHub Actions CI/CD
+
+GitHub Actions is implemented using:
+
+```text
+.github/workflows/ci-cd.yml
+```
+
+### Workflow Stages
+
+### Build
+
+* Checkout Repository
+* Setup Python
+* Upgrade pip
+* Install Dependencies
+
+### Test
+
+* Create `.env` file using GitHub Secrets
+* Execute Pytest
+
+### Deployment
+
+Branch-based deployment strategy:
+
+| Branch  | Environment |
+| ------- | ----------- |
+| staging | Staging     |
+| main    | Production  |
+
+Deployment jobs execute automatically after successful testing.
 
 ---
 
@@ -59,82 +140,23 @@ Email Notification
 ```text
 flask_Practice/
 │
+├── .github/
+│   └── workflows/
+│       └── ci-cd.yml
+│
+├── docs/
+│   └── screenshots/
+│       ├── jenkins/
+│       └── github-actions/
+│
 ├── templates/
 ├── app.py
 ├── test_app.py
 ├── requirements.txt
 ├── Jenkinsfile
-├── start_flask.sh
 ├── README.md
-├── .env
-└── docs/
-    └── screenshots/
+└── .env
 ```
-
----
-
-# Jenkins Pipeline
-
-The Jenkins pipeline is defined inside the **Jenkinsfile**.
-
-It contains three stages.
-
-## Build Stage
-
-The Build stage performs the following tasks:
-
-* Creates Python Virtual Environment
-* Upgrades pip
-* Installs project dependencies
-* Creates the required `.env` file
-
----
-
-## Test Stage
-
-The Test stage executes:
-
-```bash
-pytest -v
-```
-
-If any test fails, the pipeline stops immediately.
-
----
-
-## Deploy Stage
-
-The Deploy stage performs a simple deployment by:
-
-* Stopping the previous Flask process (if running)
-* Starting the Flask application
-
-Deployment is intended for a staging environment for learning purposes.
-
----
-
-# GitHub Webhook
-
-A GitHub Webhook has been configured between GitHub and Jenkins.
-
-Whenever code is pushed to the **main** branch:
-
-* GitHub automatically notifies Jenkins.
-* Jenkins starts the pipeline automatically.
-* No manual build is required.
-
----
-
-# Email Notifications
-
-Jenkins has been configured with Gmail SMTP.
-
-Notifications are automatically sent for:
-
-* Successful Builds
-* Failed Builds
-
-This allows developers to know the pipeline status without logging into Jenkins.
 
 ---
 
@@ -144,6 +166,7 @@ This allows developers to know the pipeline status without logging into Jenkins.
 
 ```bash
 git clone https://github.com/Vilas-Ingle/flask_Practice.git
+
 cd flask_Practice
 ```
 
@@ -151,21 +174,18 @@ cd flask_Practice
 
 ## Create Virtual Environment
 
+Linux / macOS
+
 ```bash
 python3 -m venv venv
-```
-
-Activate it:
-
-Linux/Mac
-
-```bash
 source venv/bin/activate
 ```
 
 Windows
 
 ```cmd
+python -m venv venv
+
 venv\Scripts\activate
 ```
 
@@ -184,8 +204,9 @@ pip install -r requirements.txt
 Create a `.env` file:
 
 ```text
-MONGO_URI=<MongoDB Connection String>
-SECRET_KEY=<Secret Key>
+MONGO_URI=<MongoDB Atlas Connection String>
+
+SECRET_KEY=<Your Secret Key>
 ```
 
 ---
@@ -196,7 +217,7 @@ SECRET_KEY=<Secret Key>
 python app.py
 ```
 
-Application will be available at:
+Application URL
 
 ```text
 http://localhost:5000
@@ -204,9 +225,7 @@ http://localhost:5000
 
 ---
 
-# Running Tests
-
-Execute:
+# Running Unit Tests
 
 ```bash
 pytest -v
@@ -214,65 +233,107 @@ pytest -v
 
 ---
 
+# GitHub Webhook
+
+A GitHub Webhook is configured with Jenkins.
+
+Whenever code is pushed to the repository:
+
+* GitHub notifies Jenkins
+* Jenkins automatically starts the CI pipeline
+* No manual intervention is required
+
+---
+
+# GitHub Secrets
+
+GitHub Actions securely stores sensitive information using Repository Secrets.
+
+Secrets configured:
+
+* `MONGO_URI`
+* `SECRET_KEY`
+
+These secrets are injected during workflow execution without exposing their values in logs.
+
+---
+
 # Screenshots
 
-The project includes screenshots for:
+Documentation screenshots are organized as follows:
 
-* Project Structure
-* Python Virtual Environment
+```text
+docs/
+└── screenshots/
+    ├── jenkins/
+    └── github-actions/
+```
+
+### Jenkins
+
 * Jenkins Installation
 * Jenkins Dashboard
 * Jenkins Pipeline
-* Successful Pipeline Execution
-* GitHub Webhook
-* Webhook Trigger
-* Success Email Notification
-* Failure Email Notification
-* Flask Application
-* Pytest Execution
+* Webhook Configuration
+* Successful Build
+* Email Notifications
+* Flask Deployment
 
-Screenshots are available inside:
+### GitHub Actions
 
-```text
-docs/screenshots/flask-assignment/
-```
+* GitHub Actions Workflow
+* Repository Secrets
+* Build Success
+* Test Success
+* Staging Deployment
+* Production Deployment
+* Workflow Graph
+* Workflow Logs
 
 ---
 
 # Future Improvements
 
-This project currently demonstrates a basic Jenkins CI pipeline.
-
-Future enhancements include:
-
-* Dockerizing the Flask application
-* Deploying using Docker Compose
-* Deploying with Gunicorn + Nginx
-* CI/CD using GitHub Actions
-* Kubernetes deployment
-* Production deployment using Systemd services
+* Dockerize the Flask Application
+* Deploy using Docker Compose
+* Gunicorn + Nginx Deployment
+* Deploy to AWS EC2 using GitHub Actions
+* Kubernetes Deployment
+* Terraform Infrastructure Provisioning
+* Monitoring using Prometheus & Grafana
 
 ---
 
 # Deliverables
 
-✔ Jenkins Installation
+* Jenkins CI Pipeline
+* GitHub Actions Workflow
+* Jenkinsfile
+* GitHub Secrets
+* GitHub Webhook
+* Automated Build
+* Automated Testing
+* Branch-based Deployment
+* Email Notifications
+* Documentation
+* Screenshots
 
-✔ Jenkinsfile
+---
 
-✔ GitHub Webhook
+# Learning Outcomes
 
-✔ Automated Build
+Through this project, the following DevOps concepts were implemented:
 
-✔ Automated Testing
-
-✔ Automated Deployment
-
-✔ Email Notifications
-
-✔ Documentation
-
-✔ Screenshots
+* Continuous Integration (CI)
+* Continuous Deployment (CD)
+* Pipeline as Code
+* GitHub Webhooks
+* GitHub Actions
+* Jenkins Pipelines
+* GitHub Secrets
+* Branch-based Deployment Strategy
+* Automated Testing
+* Build Automation
 
 ---
 
