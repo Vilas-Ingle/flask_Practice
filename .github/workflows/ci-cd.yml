@@ -37,3 +37,7 @@ jobs:
 
       - name: Display .env file
         run: cat .env
+
+      - name: Run Unit Tests
+        run: |
+          pytest -v
