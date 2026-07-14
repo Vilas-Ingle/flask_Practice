@@ -41,3 +41,29 @@ jobs:
       - name: Run Unit Tests
         run: |
           pytest -v
+
+    deploy-staging:
+      needs: build
+
+      if: github.ref == 'refs/heads/staging'
+
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying application to STAGING environment..."
+          echo "Deployment completed successfully."
+
+  deploy-production:
+    needs: build
+
+    if: github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Production
+        run: |
+          echo "Deploying application to PRODUCTION environment..."
+          echo "Deployment completed successfully."
